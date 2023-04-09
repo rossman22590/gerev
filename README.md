@@ -40,6 +40,9 @@ Coming Soon...
  
 :pray:  - by the community 
 
+## Add your own data source NOW 🚀
+See the full guide at [ADDING-A-DATA-SOURCE.md](./ADDING-A-DATA-SOURCE.md).
+
 
 ## Natural Language
 Enables searching using natural language. such as `"How to do X"`, `"how to connect to Y"`, `"Do we support Z"`
