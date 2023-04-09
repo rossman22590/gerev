@@ -1,11 +1,21 @@
-from sentence_transformers import SentenceTransformer, CrossEncoder
-from transformers import pipeline
-import torch
+from pathlib import Path
+import os
 
+IS_IN_DOCKER = os.environ.get('DOCKER_DEPLOYMENT', False)
+USER_HOME_DIR = os.environ.get("USER_HOME_DIR", os.path.expanduser("~"))
 
-bi_encoder = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
+if os.name == 'nt':
+    STORAGE_PATH = Path(".gerev\\storage")
+else:
+    STORAGE_PATH = Path('/opt/storage/') if IS_IN_DOCKER else Path(f'{USER_HOME_DIR}/.gerev/storage/')
 
-cross_encoder_small = CrossEncoder('cross-encoder/ms-marco-TinyBERT-L-2-v2')
-cross_encoder_large = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+if not STORAGE_PATH.exists():
+    STORAGE_PATH.mkdir(parents=True)
 
-qa_model = pipeline('question-answering', model='deepset/roberta-base-squad2')
+UI_PATH = Path('/ui/') if IS_IN_DOCKER else Path('../ui/build/')
+SQLITE_DB_PATH = STORAGE_PATH / 'db.sqlite3'
+SQLITE_TASKS_PATH = STORAGE_PATH / 'tasks.sqlite3'
+SQLITE_INDEXING_PATH = STORAGE_PATH / 'indexing.sqlite3'
+FAISS_INDEX_PATH = str(STORAGE_PATH / 'faiss_index.bin')
+BM25_INDEX_PATH = str(STORAGE_PATH / 'bm25_index.bin')
+UUID_PATH = str(STORAGE_PATH / '.uuid')
