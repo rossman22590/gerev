@@ -12,6 +12,7 @@ RUN npm run build
 # Build Stage 2 - Build the backend and get the built UI from Stage 1
 FROM python:3.9
 ENV CAPTURE_TELEMETRY=1
+ENV USER_HOME_DIR=/root
 
 WORKDIR /app
 
