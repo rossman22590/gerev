@@ -1,5 +1,4 @@
-# Build Stage 1 
-# Build the UI
+# Build Stage 1 - Build the UI
 FROM node:12 AS node-builder
 
 WORKDIR /app/ui
@@ -10,9 +9,7 @@ RUN npm install --silent --production
 COPY ./ui .
 RUN npm run build
 
-
-# Build Stage 2
-# Builds the backend as well as gets the built UI from Stage 1
+# Build Stage 2 - Build the backend and get the built UI from Stage 1
 FROM python:3.9
 ENV CAPTURE_TELEMETRY=1
 
@@ -27,9 +24,17 @@ COPY ./app /app
 COPY ./app/models.py /tmp/models.py
 RUN python3 /tmp/models.py
 
+# Copy the built UI from Stage 1
 COPY --from=node-builder /app/ui/build /ui
+
+# Copy the run script
 COPY ./run.sh .
+
+# Create the storage directory
 RUN mkdir /opt/storage
 
+# Expose the application's port
 EXPOSE 80
+
+# Run the application
 CMD ./run.sh
